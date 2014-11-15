@@ -52,7 +52,7 @@ func sync() error {
 		if err != nil && !os.IsNotExist(err) {
 			return err
 		}
-		if err != nil || fi.Size() == 0 {
+		if err != nil || fi.Size() < 30 {
 			log.Println("Downloading " + fname)
 			cmd := exec.Command("bash", "-c", "curl http://cran-logs.rstudio.com/"+year+"/"+fname+" | zcat | sort | gzip > data/"+fname)
 			err = cmd.Run()
@@ -116,7 +116,8 @@ func (s *Scanner) NextLine() (string, error) {
 		if err != nil {
 			return "", err
 		}
-		if fi.Size() == 0 {
+		if fi.Size() < 30 {
+			// Failed downloads are 20 bytes for some reason
 			return "", errors.New("Ignoring empty file")
 		}
 		r, err := os.Open(filename)
