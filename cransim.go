@@ -17,7 +17,7 @@ var chanNextLine chan string = make(chan string)
 var conns []chan string = make([]chan string, 0, 0)
 var chanRegister chan chan string = make(chan chan string)
 var chanUnregister chan chan string = make(chan chan string)
-const timeOffset = 48 * time.Hour
+const timeOffset = 7 * 24 * time.Hour
 const addr = ":6789"
 
 func sync() error {
@@ -94,7 +94,7 @@ func doWrites(conn net.Conn, ch chan string) {
 }
 
 func virtualNow() time.Time {
-	return time.Now().UTC().Add(-24 * time.Hour)
+	return time.Now().UTC().Add(-timeOffset)
 }
 
 type Scanner struct {
