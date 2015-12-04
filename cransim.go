@@ -75,6 +75,7 @@ func handleConn(conn net.Conn) {
 	conn.Read(buf)
 	chanUnregister <- ch
 	conn.Close()
+	close(ch)
 	log.Println("Connection closed from ", conn.RemoteAddr())
 }
 
@@ -203,7 +204,10 @@ func service() {
 			}
 		case str := <-chanNextLine:
 			for _, ch := range conns {
-				ch <- str
+				select {
+				case ch <- str: break
+				default: break
+				}
 			}
 		}
 	}
